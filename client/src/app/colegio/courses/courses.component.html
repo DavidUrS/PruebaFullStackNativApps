@@ -1,0 +1,55 @@
+<div class="container">
+  <h1 class="display-4 text-center">Gestión de datos</h1>
+<hr>
+    <ul class="nav justify-content-around">
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/courses"><h3>Cursos</h3></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/students"><h3>Estudiantes</h3></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teachers"><h3>Profesores</h3></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/users"><h3>Registra un nuevo usuario</h3></a>
+        </li>
+      </ul>
+</div>
+<div class="container">
+  <h1 class="text-center">Registro de cursos</h1>
+  <form (ngSubmit)="saveCourses()">
+      <div class="row">
+        <div class="col">
+          <input type="text" [(ngModel)]="modelCourse.codigo" class="form-control" placeholder="Código" [ngModelOptions]="{standalone: true}" required>
+        </div>
+        <div class="col">
+          <input type="text" [(ngModel)]="modelCourse.nombre" class="form-control" placeholder="Nombre" [ngModelOptions]="{standalone: true}" required>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col">
+            <input type="text" [(ngModel)]="modelCourse.observaciones" class="form-control" placeholder="Observaciones" [ngModelOptions]="{standalone: true}" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-outline-primary mt-2 mx-auto">Guardar curso</button>
+    </form>
+
+    <table class="table table-hover mt-4">
+        <thead>
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Observaciones</th>
+            <th scope="col">Editar</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let course of courseService.courses">
+          <td>{{course.codigo}}</td>
+          <td>{{course.nombre}}</td>
+          <td>{{course.observaciones}}</td>
+          <td><button (click)="deleteCourse(course._id)" type="button" class="btn btn-outline-danger">Eliminar</button></td>
+        </tbody>
+     
+      </table>
+</div>

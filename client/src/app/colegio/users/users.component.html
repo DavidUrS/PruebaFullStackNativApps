@@ -1,0 +1,37 @@
+<div class="container">
+  <h1 class="display-4 text-center">Gestión de datos</h1>
+<hr>
+    <ul class="nav justify-content-around">
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/courses"><h3>Cursos</h3></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/students"><h3>Estudiantes</h3></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/teachers"><h3>Profesores</h3></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/users"><h3>Registra un nuevo usuario</h3></a>
+        </li>
+      </ul>
+</div>
+
+<div class="container mt-4">
+  <div class="col">
+    <h2 class="text-center">Registra un nuevo usuario</h2>
+    <form (ngSubmit)="saveUsers()">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Usuario</label>
+        <input type="text" class="form-control" [(ngModel)]="modelUsers.user" placeholder="Ingresa tu usuario" [ngModelOptions]="{standalone: true}">
+        <small class="form-text text-muted">Este usuario puede ser un correo o un nombre</small>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" class="form-control" [(ngModel)]="modelUsers.password" placeholder="Contraseña" [ngModelOptions]="{standalone: true}">
+      </div>
+      <button type="submit" class="btn btn-success mr-auto">Registrarme</button>
+    </form>
+  </div>
+</div>
+
