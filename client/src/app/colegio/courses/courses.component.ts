@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Courses } from './../../models/courses';
 import { CoursesService } from './../../services/courses.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.css']
+  styleUrls: ['./courses.component.css'],
+  providers: [CoursesService]
 })
 export class CoursesComponent implements OnInit {
 
-  modelCourse = new Courses();
   constructor(private courseService : CoursesService) { }
 
   ngOnInit() {
@@ -22,19 +23,13 @@ export class CoursesComponent implements OnInit {
     })
   }
 
-  saveCourses(){
-    const newCourse: Courses = {
-      codigo: this.modelCourse.codigo,
-      nombre: this.modelCourse.nombre,
-      observaciones: this.modelCourse.observaciones
-    }
-    this.courseService.postCourses(newCourse).subscribe(res=>{
+  saveCourses(form?: NgForm){
+    this.courseService.postCourses(form.value).subscribe(res=>{
       this.getCourses();
+      this.cleanForm(form);
       console.log(res)
     })
-    this.modelCourse.codigo='';
-    this.modelCourse.nombre='';
-    this.modelCourse.observaciones='';
+
   }
 
   deleteCourse(id){
@@ -42,6 +37,13 @@ export class CoursesComponent implements OnInit {
       this.getCourses();
       console.log(res)
     })
+  }
+
+  cleanForm(form?: NgForm) {
+    if (form) {
+      form.reset();
+      this.courseService.selectedCourse = new Courses();
+    }
   }
 
 }

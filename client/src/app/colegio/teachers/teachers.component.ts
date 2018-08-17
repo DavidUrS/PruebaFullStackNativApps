@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TeachersService } from './../../services/teachers.service';
 import { CoursesService } from './../../services/courses.service';
 import { Teachers } from './../../models/teachers';  
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -32,23 +33,12 @@ export class TeachersComponent implements OnInit {
     })
   }
 
-  saveTeachers(){
-    const newTeacher: Teachers= {
-      identidad: this.modelTeacher.identidad,
-      nombres: this.modelTeacher.nombres,
-      apellidos: this.modelTeacher.apellidos,
-      genero: this.modelTeacher.genero,
-      curso: this.modelTeacher.curso
-    }
-    this.teacherService.postTeacher(newTeacher).subscribe(res=>{
+  saveTeachers(form?: NgForm){
+    this.teacherService.postTeacher(form.value).subscribe(res=>{
       this.getTeachers();
+      this.cleanForm(form);
       console.log(res);
     })
-    this.modelTeacher.identidad='';
-    this.modelTeacher.nombres='';
-    this.modelTeacher.apellidos='';
-    this.modelTeacher.genero= '';
-    this.modelTeacher.curso='';
   }
 
   deleteTeacher(id:string){
@@ -56,6 +46,13 @@ export class TeachersComponent implements OnInit {
       this.getTeachers();
       console.log(res)
     })
+  }
+
+  cleanForm(form?: NgForm) {
+    if (form) {
+      form.reset();
+      this.teacherService.selectedTeacher = new Teachers();
+    }
   }
 
 }

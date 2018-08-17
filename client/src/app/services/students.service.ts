@@ -6,10 +6,13 @@ import { Students } from './../models/students';
   providedIn: 'root'
 })
 export class StudentsService {
+  selectedStudent:Students
   students:Students[];
   API_STUDENTS  =  'http://localhost:3000';
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) {
+    this.selectedStudent = new Students();
+   }
 
   getStudents(){
     return this.http.get<Students[]>(`${this.API_STUDENTS}/students`)

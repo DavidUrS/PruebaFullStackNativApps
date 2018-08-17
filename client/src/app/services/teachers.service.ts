@@ -5,10 +5,13 @@ import { Teachers } from './../models/teachers';
   providedIn: 'root'
 })
 export class TeachersService {
+  selectedTeacher: Teachers;
   teachers:Teachers[];
   API_TEACHERS  =  'http://localhost:3000';
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) {
+    this.selectedTeacher = new Teachers();
+   }
 
   getTeachers(){
     return this.http.get<Teachers[]>(`${this.API_TEACHERS}/teachers`);

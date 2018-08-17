@@ -5,10 +5,13 @@ import { Courses } from './../models/courses';
   providedIn: 'root'
 })
 export class CoursesService {
+  selectedCourse: Courses;
   courses:Courses[];
   API_COURSES  =  'http://localhost:3000';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.selectedCourse = new Courses();
+   }
   getCourses(){
     return  this.http.get<Courses[]>(`${this.API_COURSES}/courses`);
   }

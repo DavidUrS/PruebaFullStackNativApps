@@ -18,27 +18,27 @@
 </div>
 <div class="container">
     <h1 class="text-center">Registro de profesores</h1>
-    <form (ngSubmit)="saveTeachers()">
+    <form #teacherForm="ngForm" (ngSubmit)="saveTeachers(teacherForm)">
         <div class="row">
           <div class="col">
-            <input type="text" [(ngModel)]="modelTeacher.identidad" class="form-control" placeholder="Identificacion" [ngModelOptions]="{standalone: true}" required>
+            <input type="text" name="identidad" #name="ngModel" [(ngModel)]="teacherService.selectedTeacher.identidad" class="form-control" placeholder="Identificacion">
           </div>
           <div class="col">
-            <input type="text" [(ngModel)]="modelTeacher.nombres" class="form-control" placeholder="Nombres" [ngModelOptions]="{standalone: true}" required>
+            <input type="text" name="nombres" #name="ngModel" [(ngModel)]="teacherService.selectedTeacher.nombres" class="form-control" placeholder="Nombres">
           </div>
         </div>
         <div class="row mt-2">
           <div class="col">
-            <input type="text" [(ngModel)]="modelTeacher.apellidos" class="form-control" placeholder="Apellidos" [ngModelOptions]="{standalone: true}" required>
+            <input type="text" name="apellidos" #name="ngModel" [(ngModel)]="teacherService.selectedTeacher.apellidos" class="form-control" placeholder="Apellidos">
           </div>
           <div class="col">
-            <input type="text" [(ngModel)]="modelTeacher.genero" class="form-control" placeholder="Genero" [ngModelOptions]="{standalone: true}" required>
+            <input type="text" name="genero" #name="ngModel" [(ngModel)]="teacherService.selectedTeacher.genero" class="form-control" placeholder="Genero">
           </div>
         </div>
         <div class="row mt-2">
           <div class="col">
               <label>Selecciona el curso</label>
-              <select class="custom-select" [(ngModel)]="modelTeacher.curso" [ngModelOptions]="{standalone: true}">
+              <select class="custom-select" name="curso" #name="ngModel" [(ngModel)]="teacherService.selectedTeacher.curso">
                 <option *ngFor="let course of coursesService.courses" value="{{course.nombre}}" >{{course.nombre}}</option>
               </select>
               <small>Recuerda que el profesor debe estar asociado a una materia para poder registrarlo</small>              

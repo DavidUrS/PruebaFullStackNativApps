@@ -30,13 +30,11 @@ app.use(cors())
 // Lanzando archivos estaticos de produccion de angular
 app.use(express.static(path.join(__dirname,'dist/client')));
 
-
 // Definiendo rutas de las apis
 app.use('/users',userRoutes);
 app.use('/courses',courseRoutes);
 app.use('/teachers',teacherRoutes);
-app.use('/students',studenRoutes);
-
+app.use('/students',studenRoutes); 
 
 // Levantando el servidor
 server.listen(port,()=>{

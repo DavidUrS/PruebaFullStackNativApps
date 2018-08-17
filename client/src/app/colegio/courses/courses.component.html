@@ -18,18 +18,18 @@
 </div>
 <div class="container">
   <h1 class="text-center">Registro de cursos</h1>
-  <form (ngSubmit)="saveCourses()">
+  <form #courseForm="ngForm" (ngSubmit)="saveCourses(courseForm)">
       <div class="row">
         <div class="col">
-          <input type="text" [(ngModel)]="modelCourse.codigo" class="form-control" placeholder="Código" [ngModelOptions]="{standalone: true}" required>
+          <input type="text" name="codigo" #name="ngModel" [(ngModel)]="courseService.selectedCourse.codigo" class="form-control" placeholder="Código">
         </div>
         <div class="col">
-          <input type="text" [(ngModel)]="modelCourse.nombre" class="form-control" placeholder="Nombre" [ngModelOptions]="{standalone: true}" required>
+          <input type="text" name="nombre" #name="ngModel" [(ngModel)]="courseService.selectedCourse.nombre" class="form-control" placeholder="Nombre">
         </div>
       </div>
       <div class="row mt-2">
         <div class="col">
-            <input type="text" [(ngModel)]="modelCourse.observaciones" class="form-control" placeholder="Observaciones" [ngModelOptions]="{standalone: true}" required>
+            <input type="text" name="observaciones" #name="ngModel" [(ngModel)]="courseService.selectedCourse.observaciones" class="form-control" placeholder="Observaciones">
         </div>
       </div>
       <button type="submit" class="btn btn-outline-primary mt-2 mx-auto">Guardar curso</button>

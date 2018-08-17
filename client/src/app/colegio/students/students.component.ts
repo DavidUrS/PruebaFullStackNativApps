@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CoursesService } from './../../services/courses.service';
 import { StudentsService } from './../../services/students.service';
 import { Students } from './../../models/students';
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -31,23 +32,13 @@ export class StudentsComponent implements OnInit {
     })
   }
 
-  saveStudents(){
-    const newStudent: Students={
-      identificacion: this.modelStudents.identificacion,
-      nombres: this.modelStudents.nombres,
-      apellidos: this.modelStudents.apellidos,
-      genero: this.modelStudents.genero,
-      curso: this.modelStudents.curso
-    }
-    this.studentService.postStudent(newStudent).subscribe(res=>{
+  saveStudents(form?:NgForm){
+    this.studentService.postStudent(form.value).subscribe(res=>{
       this.getStudents();
-      console.log(res);
+      this.cleanForm(form)
+;      console.log(res);
     })
-    this.modelStudents.identificacion='';
-    this.modelStudents.nombres='';
-    this.modelStudents.apellidos='';
-    this.modelStudents.genero='';
-    this.modelStudents.curso='';
+
   }
 
   deleteStudent(id){
@@ -55,6 +46,13 @@ export class StudentsComponent implements OnInit {
       this.getStudents();
       console.log(res);
     })
+  }
+
+  cleanForm(form?: NgForm) {
+    if (form) {
+      form.reset();
+      this.studentService.selectedStudent = new Students();
+    }
   }
 
   
