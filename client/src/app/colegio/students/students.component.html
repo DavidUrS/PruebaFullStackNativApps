@@ -1,24 +1,25 @@
 <div class="container">
-  <h1 class="display-4 text-center">Gestión de datos</h1>
-<hr>
-    <ul class="nav justify-content-around">
-        <li class="nav-item">
-          <a class="nav-link active" routerLink="/courses"><h3>Cursos</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/students"><h3>Estudiantes</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/teachers"><h3>Profesores</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/users"><h3>Registra un nuevo usuario</h3></a>
-        </li>
-      </ul>
-</div>
+    <h1 class="display-4 text-center">Gestión de datos</h1>
+  <hr>
+
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" routerLink="/courses">Cursos</a>
+          <a class="nav-link" routerLink="/students">Estudiantes</a>
+          <a class="nav-link" routerLink="/teachers">Profesores</a>
+          <a class="nav-link" routerLink="/users">Usuario</a>        
+        </div>
+      </div>
+    </nav>
+  </div>
 <div class="container">
   <h1 class="text-center">Registro de estudiantes</h1>
   <form #studentsForm="ngForm" (ngSubmit)="saveStudents(studentsForm)">
+      <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="studentService.selectedStudent._id">    
       <div class="row">
         <div class="col">
           <input type="text" name="identificacion" #name="ngModel" [(ngModel)]="studentService.selectedStudent.identificacion" class="form-control" placeholder="Identificacion">
@@ -35,10 +36,9 @@
           <input type="text" name="genero" #name="ngModel" [(ngModel)]="studentService.selectedStudent.genero" class="form-control" placeholder="Genero" >
         </div>
       </div>
-      <div class="row mt-2">
-        <div class="col">
+      <div class="row">
+        <div class="col s12">
         <label>Selecciona el curso</label>
-          
             <select class="custom-select" name="curso" #name="ngModel" [(ngModel)]="studentService.selectedStudent.curso">
               <option *ngFor="let course of courseService.courses" value="{{course.nombre}}" >{{course.nombre}}</option>
             </select>
@@ -46,29 +46,29 @@
         </div>
       </div>
       
-      <button type="submit" class="btn btn-outline-primary mt-2 mx-auto">Guardar curso</button>
+      <button type="submit" class="btn btn-outline-success">Guardar curso</button>
+
+      <table class="table table-hover mt-4">
+          <thead>
+            <tr>
+              <th scope="col">Identificacion</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Genero</th>
+              <th scope="col">Curso</th>
+              <th scope="col">Editar</th>
+              <th scope="col">Eliminar</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let student of studentService.students">
+              <td>{{student.identificacion}}</td>
+              <td>{{student.nombres}}</td>
+              <td>{{student.apellidos}}</td>
+              <td>{{student.genero}}</td>
+              <td>{{student.curso.nombre}}</td>
+              <td><button (click)="editStudent(student)" type="button" class="btn btn-outline-warning">Editar</button></td>            
+              <td><button (click)="deleteStudent(student._id, studentsForm)" type="button" class="btn btn-outline-danger">Eliminar</button></td>            
+          </tbody>
+        </table>
     </form>
-
-    <table class="table table-hover mt-4">
-        <thead>
-          <tr>
-            <th scope="col">Identificacion</th>
-            <th scope="col">Nombres</th>
-            <th scope="col">Apellidos</th>
-            <th scope="col">Genero</th>
-            <th scope="col">Curso</th>
-            <th scope="col">Acción</th>
-          </tr>
-        </thead>
-        <tbody *ngFor="let student of studentService.students">
-            <td>{{student.identificacion}}</td>
-            <td>{{student.nombres}}</td>
-            <td>{{student.apellidos}}</td>
-            <td>{{student.genero}}</td>
-            <td>{{student.curso.nombre}}</td>
-            <td><button (click)="deleteStudent(student._id)" type="button" class="btn btn-outline-danger">Eliminar</button></td>            
-        </tbody>
-     
-      </table>
 </div>
-

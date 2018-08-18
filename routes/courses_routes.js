@@ -43,6 +43,36 @@ router.post('/',[
     }
 })
 
+//Editando cursos
+router.put('/:id',[
+    check('codigo').isString(['messaje','Debe ser un numero']).not().isEmpty(),
+    check('nombre').isString(['messaje','Debe ser un numero']).not().isEmpty(),
+    check('observaciones').isString(['messaje','Debe ser un numero']).not().isEmpty()
+],(req,res)=>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.json("Todos los campos son requeridos")
+    }else{
+        const {id} = req.params;
+        var courseEdit = new Courses({
+   
+            codigo: req.body.codigo,
+            nombre: req.body.nombre,
+            observaciones: req.body.observaciones
+        })
+        
+        Courses.findByIdAndUpdate(id,{$set: courseEdit},{new:true},(err,course)=>{
+            if(err){
+                res.json(`Hubo un error ${err}`)
+                console.log(`Hubo un error ${err}`)
+            }else{
+                res.json(`Se actualizó ${course}`)
+                console.log(`Se actualizó ${course}`)
+            }
+        })        
+    }
+})
+
 // Eliminando cursos
 router.delete('/:id',(req,res)=>{
     Courses.findByIdAndRemove(req.params.id,(err,doc)=>{
@@ -58,32 +88,6 @@ router.delete('/:id',(req,res)=>{
     })
 })
 
-//Editando cursos
-router.put('/:id',[
-    check('codigo').isString(['messaje','Debe ser un numero']).not().isEmpty(),
-    check('nombre').isString(['messaje','Debe ser un numero']).not().isEmpty(),
-    check('observaciones').isString(['messaje','Debe ser un numero']).not().isEmpty()
-],(re,res)=>{
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.json("Todos los campos son requeridos")
-    }else{
-        let id = req.params;
-        var courseEdit = new Courses({
-            codigo: req.body.codigo,
-            nombre: req.body.nombre,
-            observaciones: req.body.observaciones
-        })
-        Courses.findByIdAndUpdate(id,{$set: courseEdit},{new:true},(err,course)=>{
-            if(err){
-                res.json(`Hubo un error ${err}`)
-                console.log(`Hubo un error ${err}`)
-            }else{
-                res.json(`Se actualizó ${course}`)
-                console.log(`Se actualizó ${course}`)
-            }
-        })        
-    }
-})
+
 
 module.exports = router;

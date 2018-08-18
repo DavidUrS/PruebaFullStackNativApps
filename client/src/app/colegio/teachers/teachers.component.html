@@ -1,24 +1,25 @@
 <div class="container">
   <h1 class="display-4 text-center">Gestión de datos</h1>
 <hr>
-    <ul class="nav justify-content-around">
-        <li class="nav-item">
-          <a class="nav-link active" routerLink="/courses"><h3>Cursos</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/students"><h3>Estudiantes</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/teachers"><h3>Profesores</h3></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLink="/users"><h3>Registra un nuevo usuario</h3></a>
-        </li>
-      </ul>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" routerLink="/courses">Cursos</a>
+        <a class="nav-link" routerLink="/students">Estudiantes</a>
+        <a class="nav-link" routerLink="/teachers">Profesores</a>
+        <a class="nav-link" routerLink="/users">Usuario</a>        
+      </div>
+    </div>
+  </nav>
 </div>
 <div class="container">
     <h1 class="text-center">Registro de profesores</h1>
     <form #teacherForm="ngForm" (ngSubmit)="saveTeachers(teacherForm)">
+        <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="teacherService.selectedTeacher._id">    
+      
         <div class="row">
           <div class="col">
             <input type="text" name="identidad" #name="ngModel" [(ngModel)]="teacherService.selectedTeacher.identidad" class="form-control" placeholder="Identificacion">
@@ -44,32 +45,33 @@
               <small>Recuerda que el profesor debe estar asociado a una materia para poder registrarlo</small>              
           </div>
         </div>
-        
-        <button type="submit" class="btn btn-outline-primary mt-2 mx-auto">Guardar curso</button>
+        <button type="submit" class="btn btn-outline-success mt-2 mx-auto">Guardar curso</button>
+        <table class="table table-hover mt-4">
+            <thead>
+              <tr>
+                <th scope="col">Identificacion</th>
+                <th scope="col">Nombres</th>
+                <th scope="col">Apellidos</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Curso</th>
+                <th scope="col">Editar</th>
+                <th scope="col">Eliminar</th>
+              </tr>
+            </thead>    
+            <tbody *ngFor="let teacher of teacherService.teachers">
+              <tr>
+                <td>{{teacher.identidad}}</td>
+                <td>{{teacher.nombres}}</td>
+                <td>{{teacher.apellidos}}</td>
+                <td>{{teacher.genero}}</td>
+                <td>{{teacher.curso.nombre}}</td>
+                <td><button (click)="editTeacher(teacher)" type="button" class="btn btn-outline-warning">Editar</button></td>
+                <td><button (click)="deleteTeacher(teacher._id, teacherForm)" type="button" class="btn btn-outline-danger">Eliminar</button></td>
+              </tr>
+            </tbody>   
+          </table>
       </form>
   
-      <table class="table table-hover mt-4">
-          <thead>
-            <tr>
-              <th scope="col">Identificacion</th>
-              <th scope="col">Nombres</th>
-              <th scope="col">Apellidos</th>
-              <th scope="col">Genero</th>
-              <th scope="col">Curso</th>
-              <th scope="col">Acción</th>
-            </tr>
-          </thead>    
-          <tbody *ngFor="let teacher of teacherService.teachers">
-            <tr>
-              <td>{{teacher.identidad}}</td>
-              <td>{{teacher.nombres}}</td>
-              <td>{{teacher.apellidos}}</td>
-              <td>{{teacher.genero}}</td>
-              <td>{{teacher.curso.nombre}}</td>
-            <td><button (click)="deleteTeacher(teacher._id)" type="button" class="btn btn-outline-danger">Eliminar</button></td>
-            </tr>
-          </tbody>   
-        </table>
   </div>
   
   

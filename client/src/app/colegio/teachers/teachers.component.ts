@@ -28,22 +28,34 @@ export class TeachersComponent implements OnInit {
 
   getTeachers(){
     this.teacherService.getTeachers().subscribe(res=>{
-      console.log("si")
       this.teacherService.teachers = res;;
     })
   }
 
   saveTeachers(form?: NgForm){
-    this.teacherService.postTeacher(form.value).subscribe(res=>{
-      this.getTeachers();
-      this.cleanForm(form);
-      console.log(res);
-    })
+    if(form.value._id){
+      this.teacherService.updateTeacher(form.value).subscribe(res=>{
+        
+        this.getTeachers();        
+        console.log(res);
+      })
+    }else{
+      this.teacherService.postTeacher(form.value).subscribe(res=>{
+        this.getTeachers();
+        this.cleanForm(form);
+        console.log(res);
+      })
+    }
   }
 
-  deleteTeacher(id:string){
+  editTeacher(teacher){
+    this.teacherService.selectedTeacher=teacher;
+  }
+
+  deleteTeacher(id:string,form: NgForm){
     this.teacherService.deleteTeacher(id).subscribe(res=>{
       this.getTeachers();
+      this.cleanForm(form);
       console.log(res)
     })
   }

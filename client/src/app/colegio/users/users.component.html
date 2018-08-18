@@ -1,20 +1,19 @@
 <div class="container">
   <h1 class="display-4 text-center">Gestión de datos</h1>
 <hr>
-    <ul class="nav justify-content-around">
-        <li class="nav-item">
-          <a class="nav-link active" routerLink="/courses"><h3>Cursos</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/students"><h3>Estudiantes</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/teachers"><h3>Profesores</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/users"><h3>Registra un nuevo usuario</h3></a>
-        </li>
-      </ul>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" routerLink="/courses">Cursos</a>
+        <a class="nav-link" routerLink="/students">Estudiantes</a>
+        <a class="nav-link" routerLink="/teachers">Profesores</a>
+        <a class="nav-link" routerLink="/users">Usuario</a>        
+      </div>
+    </div>
+  </nav>
 </div>
 
 <div class="container mt-4">

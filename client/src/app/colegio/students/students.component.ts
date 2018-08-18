@@ -4,7 +4,6 @@ import { StudentsService } from './../../services/students.service';
 import { Students } from './../../models/students';
 import { NgForm } from '@angular/forms';
 
-
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -33,19 +32,31 @@ export class StudentsComponent implements OnInit {
   }
 
   saveStudents(form?:NgForm){
-    this.studentService.postStudent(form.value).subscribe(res=>{
-      this.getStudents();
-      this.cleanForm(form)
-;      console.log(res);
-    })
-
+    if(form.value._id){
+      this.studentService.updateStudent(form.value).subscribe(res=>{
+                  
+        this.getStudents();
+        console.log(res);
+      })
+    }else{
+      this.studentService.postStudent(form.value).subscribe(res=>{
+        this.cleanForm(form) 
+        this.getStudents();
+        console.log(res);
+      })
+    }
   }
 
   deleteStudent(id){
     this.studentService.deleteStudent(id).subscribe(res=>{
       this.getStudents();
+      this.cleanForm();
       console.log(res);
     })
+  }
+
+  editStudent(student){
+    this.studentService.selectedStudent=student;
   }
 
   cleanForm(form?: NgForm) {
@@ -56,6 +67,6 @@ export class StudentsComponent implements OnInit {
   }
 
   
-
+  
 
 }

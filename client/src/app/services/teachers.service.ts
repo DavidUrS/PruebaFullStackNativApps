@@ -20,6 +20,10 @@ export class TeachersService {
   postTeacher(teacher:Teachers){
     return this.http.post(`${this.API_TEACHERS}/teachers`,teacher);
   }
+
+  updateTeacher(teacher:Teachers){
+    return this.http.put(`${this.API_TEACHERS}/teachers/${teacher._id}`,teacher)
+  }
   
   deleteTeacher(id:string){
     return this.http.delete(`${this.API_TEACHERS}/teachers/${id}`);

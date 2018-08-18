@@ -21,6 +21,10 @@ export class StudentsService {
   postStudent(student:Students){
     return this.http.post(`${this.API_STUDENTS}/students`,student);
   }
+
+  updateStudent(student:Students){
+    return this.http.put(`${this.API_STUDENTS}/students/${student._id}`,student)
+  }
   
   deleteStudent(id:string){
     return this.http.delete(`${this.API_STUDENTS}/students/${id}`);

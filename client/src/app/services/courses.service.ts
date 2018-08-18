@@ -18,6 +18,9 @@ export class CoursesService {
   postCourses(course:Courses){
     return this.http.post(`${this.API_COURSES}/courses`,course);
   }
+  updateCourse(course:Courses){
+    return this.http.put(`${this.API_COURSES}/courses/${course._id}`,course)
+  }
   deleteCourse(id:string){
     return this.http.delete(`${this.API_COURSES}/courses/${id}`);
   }
