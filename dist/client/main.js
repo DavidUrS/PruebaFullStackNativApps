@@ -302,7 +302,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n<hr>\n    <ul class=\"nav justify-content-around\">\n        <li class=\"nav-item\">\n          <a class=\"nav-link active\" routerLink=\"/courses\"><h3>Cursos</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/students\"><h3>Estudiantes</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/teachers\"><h3>Profesores</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/users\"><h3>Registra un nuevo usuario</h3></a>\n        </li>\n      </ul>\n</div>\n<div class=\"container\">\n  <h1 class=\"text-center\">Registro de cursos</h1>\n  <form (ngSubmit)=\"saveCourses()\">\n      <div class=\"row\">\n        <div class=\"col\">\n          <input type=\"text\" [(ngModel)]=\"modelCourse.codigo\" class=\"form-control\" placeholder=\"Código\" [ngModelOptions]=\"{standalone: true}\" required>\n        </div>\n        <div class=\"col\">\n          <input type=\"text\" [(ngModel)]=\"modelCourse.nombre\" class=\"form-control\" placeholder=\"Nombre\" [ngModelOptions]=\"{standalone: true}\" required>\n        </div>\n      </div>\n      <div class=\"row mt-2\">\n        <div class=\"col\">\n            <input type=\"text\" [(ngModel)]=\"modelCourse.observaciones\" class=\"form-control\" placeholder=\"Observaciones\" [ngModelOptions]=\"{standalone: true}\" required>\n        </div>\n      </div>\n      <button type=\"submit\" class=\"btn btn-outline-primary mt-2 mx-auto\">Guardar curso</button>\n    </form>\n\n    <table class=\"table table-hover mt-4\">\n        <thead>\n          <tr>\n            <th scope=\"col\">Código</th>\n            <th scope=\"col\">Nombre</th>\n            <th scope=\"col\">Observaciones</th>\n            <th scope=\"col\">Editar</th>\n          </tr>\n        </thead>\n        <tbody *ngFor=\"let course of courseService.courses\">\n          <td>{{course.codigo}}</td>\n          <td>{{course.nombre}}</td>\n          <td>{{course.observaciones}}</td>\n          <td><button (click)=\"deleteCourse(course._id)\" type=\"button\" class=\"btn btn-outline-danger\">Eliminar</button></td>\n        </tbody>\n     \n      </table>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n<hr>\n<nav class=\"navbar navbar-expand-sm navbar-dark bg-dark\">\n    <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNavAltMarkup\" aria-controls=\"navbarNavAltMarkup\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n    <div class=\"collapse navbar-collapse\" id=\"navbarNavAltMarkup\">\n      <div class=\"navbar-nav\">\n        <a class=\"nav-link active\" routerLink=\"/courses\">Cursos</a>\n        <a class=\"nav-link\" routerLink=\"/students\">Estudiantes</a>\n        <a class=\"nav-link\" routerLink=\"/teachers\">Profesores</a>\n        <a class=\"nav-link\" routerLink=\"/users\">Usuario</a>        \n      </div>\n    </div>\n  </nav>\n</div>\n<div class=\"container\">\n  <h1 class=\"text-center\">Registro de cursos</h1>\n  <form #courseForm=\"ngForm\" (ngSubmit)=\"saveCourses(courseForm)\">\n      <div class=\"row\">\n          <input type=\"hidden\" name=\"_id\" #_id=\"ngModel\" [(ngModel)]=\"courseService.selectedCourse._id\">\n        <div class=\"col\">\n          <input type=\"text\" name=\"codigo\" #name=\"ngModel\" [(ngModel)]=\"courseService.selectedCourse.codigo\" class=\"form-control\" placeholder=\"Código\">\n        </div>\n        <div class=\"col\">\n          <input type=\"text\" name=\"nombre\" #name=\"ngModel\" [(ngModel)]=\"courseService.selectedCourse.nombre\" class=\"form-control\" placeholder=\"Nombre\">\n        </div>\n      </div>\n      <div class=\"row mt-2\">\n        <div class=\"col\">\n            <input type=\"text\" name=\"observaciones\" #name=\"ngModel\" [(ngModel)]=\"courseService.selectedCourse.observaciones\" class=\"form-control\" placeholder=\"Observaciones\">\n        </div>\n      </div>\n      <button type=\"submit\" class=\"btn btn-outline-success mt-2 mx-auto\">Guardar curso</button>\n      <small id=\"noti\"></small>\n\n      <table class=\"table table-hover mt-4\">\n          <thead>\n            <tr>\n              <th scope=\"col\">Código</th>\n              <th scope=\"col\">Nombre</th>\n              <th scope=\"col\">Observaciones</th>\n              <th scope=\"col\">Editar</th>\n              <th scope=\"col\">Eliminar</th>\n            </tr>\n          </thead>\n          <tbody *ngFor=\"let course of courseService.courses\">\n            <td>{{course.codigo}}</td>\n            <td>{{course.nombre}}</td>\n            <td>{{course.observaciones}}</td>\n            <td><button (click)=\"editCourse(course)\" type=\"button\" class=\"btn btn-outline-warning\">Editar</button></td>\n            <td><button (click)=\"deleteCourse(course._id, courseForm)\" type=\"button\" class=\"btn btn-outline-danger\">Eliminar</button></td>\n          </tbody>\n        </table>\n    </form>\n</div>\n"
 
 /***/ }),
 
@@ -334,7 +334,6 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var CoursesComponent = /** @class */ (function () {
     function CoursesComponent(courseService) {
         this.courseService = courseService;
-        this.modelCourse = new _models_courses__WEBPACK_IMPORTED_MODULE_1__["Courses"]();
     }
     CoursesComponent.prototype.ngOnInit = function () {
         this.getCourses();
@@ -345,33 +344,46 @@ var CoursesComponent = /** @class */ (function () {
             _this.courseService.courses = data;
         });
     };
-    CoursesComponent.prototype.saveCourses = function () {
+    CoursesComponent.prototype.saveCourses = function (form) {
         var _this = this;
-        var newCourse = {
-            codigo: this.modelCourse.codigo,
-            nombre: this.modelCourse.nombre,
-            observaciones: this.modelCourse.observaciones
-        };
-        this.courseService.postCourses(newCourse).subscribe(function (res) {
-            _this.getCourses();
-            console.log(res);
-        });
-        this.modelCourse.codigo = '';
-        this.modelCourse.nombre = '';
-        this.modelCourse.observaciones = '';
+        if (form.value._id) {
+            this.courseService.updateCourse(form.value).subscribe(function (res) {
+                _this.getCourses();
+                _this.cleanForm(form);
+                console.log(res);
+            });
+        }
+        else {
+            this.courseService.postCourses(form.value).subscribe(function (res) {
+                _this.getCourses();
+                _this.cleanForm(form);
+                console.log(res);
+            });
+        }
     };
-    CoursesComponent.prototype.deleteCourse = function (id) {
+    CoursesComponent.prototype.deleteCourse = function (id, form) {
         var _this = this;
         this.courseService.deleteCourse(id).subscribe(function (res) {
+            _this.cleanForm(form);
             _this.getCourses();
             console.log(res);
         });
+    };
+    CoursesComponent.prototype.editCourse = function (course) {
+        this.courseService.selectedCourse = course;
+    };
+    CoursesComponent.prototype.cleanForm = function (form) {
+        if (form) {
+            form.reset();
+            this.courseService.selectedCourse = new _models_courses__WEBPACK_IMPORTED_MODULE_1__["Courses"]();
+        }
     };
     CoursesComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-courses',
             template: __webpack_require__(/*! ./courses.component.html */ "./src/app/colegio/courses/courses.component.html"),
-            styles: [__webpack_require__(/*! ./courses.component.css */ "./src/app/colegio/courses/courses.component.css")]
+            styles: [__webpack_require__(/*! ./courses.component.css */ "./src/app/colegio/courses/courses.component.css")],
+            providers: [_services_courses_service__WEBPACK_IMPORTED_MODULE_2__["CoursesService"]]
         }),
         __metadata("design:paramtypes", [_services_courses_service__WEBPACK_IMPORTED_MODULE_2__["CoursesService"]])
     ], CoursesComponent);
@@ -400,7 +412,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n<hr>\n    <ul class=\"nav justify-content-around\">\n        <li class=\"nav-item\">\n          <a class=\"nav-link active\" routerLink=\"/courses\"><h3>Cursos</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/students\"><h3>Estudiantes</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/teachers\"><h3>Profesores</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/users\"><h3>Registra un nuevo usuario</h3></a>\n        </li>\n      </ul>\n</div>\n<div class=\"container\">\n  <h1 class=\"text-center\">Registro de estudiantes</h1>\n  <form (ngSubmit)=\"saveStudents()\">\n      <div class=\"row\">\n        <div class=\"col\">\n          <input type=\"text\" [(ngModel)]=\"modelStudents.identificacion\" class=\"form-control\" placeholder=\"Identificacion\" [ngModelOptions]=\"{standalone: true}\" required>\n        </div>\n        <div class=\"col\">\n          <input type=\"text\" [(ngModel)]=\"modelStudents.nombres\" class=\"form-control\" placeholder=\"Nombres\" [ngModelOptions]=\"{standalone: true}\" required>\n        </div>\n      </div>\n      <div class=\"row mt-2\">\n        <div class=\"col\">\n          <input type=\"text\" [(ngModel)]=\"modelStudents.apellidos\" class=\"form-control\" placeholder=\"Apellidos\" [ngModelOptions]=\"{standalone: true}\" required>\n        </div>\n        <div class=\"col\">\n          <input type=\"text\" [(ngModel)]=\"modelStudents.genero\" class=\"form-control\" placeholder=\"Genero\" [ngModelOptions]=\"{standalone: true}\" required>\n        </div>\n      </div>\n      <div class=\"row mt-2\">\n        <div class=\"col\">\n        <label>Selecciona el curso</label>\n          \n            <select class=\"custom-select\" [(ngModel)]=\"modelStudents.curso\" [ngModelOptions]=\"{standalone: true}\">\n              <option *ngFor=\"let course of courseService.courses\" value=\"{{course.nombre}}\" >{{course.nombre}}</option>\n            </select>\n            <small>Recuerda que el estudiante debe estar asociado a una materia para poder registrarlo</small>\n        </div>\n      </div>\n      \n      <button type=\"submit\" class=\"btn btn-outline-primary mt-2 mx-auto\">Guardar curso</button>\n    </form>\n\n    <table class=\"table table-hover mt-4\">\n        <thead>\n          <tr>\n            <th scope=\"col\">Identificacion</th>\n            <th scope=\"col\">Nombres</th>\n            <th scope=\"col\">Apellidos</th>\n            <th scope=\"col\">Genero</th>\n            <th scope=\"col\">Curso</th>\n            <th scope=\"col\">Acción</th>\n          </tr>\n        </thead>\n        <tbody *ngFor=\"let student of studentService.students\">\n            <td>{{student.identificacion}}</td>\n            <td>{{student.nombres}}</td>\n            <td>{{student.apellidos}}</td>\n            <td>{{student.genero}}</td>\n            <td>{{student.curso.nombre}}</td>\n            <td><button (click)=\"deleteStudent(student._id)\" type=\"button\" class=\"btn btn-outline-danger\">Eliminar</button></td>            \n        </tbody>\n     \n      </table>\n</div>\n\n"
+module.exports = "<div class=\"container\">\n    <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n  <hr>\n\n  <nav class=\"navbar navbar-expand-sm navbar-dark bg-dark\">\n      <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNavAltMarkup\" aria-controls=\"navbarNavAltMarkup\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n      <div class=\"collapse navbar-collapse\" id=\"navbarNavAltMarkup\">\n        <div class=\"navbar-nav\">\n          <a class=\"nav-link active\" routerLink=\"/courses\">Cursos</a>\n          <a class=\"nav-link\" routerLink=\"/students\">Estudiantes</a>\n          <a class=\"nav-link\" routerLink=\"/teachers\">Profesores</a>\n          <a class=\"nav-link\" routerLink=\"/users\">Usuario</a>        \n        </div>\n      </div>\n    </nav>\n  </div>\n<div class=\"container\">\n  <h1 class=\"text-center\">Registro de estudiantes</h1>\n  <form #studentsForm=\"ngForm\" (ngSubmit)=\"saveStudents(studentsForm)\">\n      <input type=\"hidden\" name=\"_id\" #_id=\"ngModel\" [(ngModel)]=\"studentService.selectedStudent._id\">    \n      <div class=\"row\">\n        <div class=\"col\">\n          <input type=\"text\" name=\"identificacion\" #name=\"ngModel\" [(ngModel)]=\"studentService.selectedStudent.identificacion\" class=\"form-control\" placeholder=\"Identificacion\">\n        </div>\n        <div class=\"col\">\n          <input type=\"text\" name=\"nombres\" #name=\"ngModel\" [(ngModel)]=\"studentService.selectedStudent.nombres\" class=\"form-control\" placeholder=\"Nombres\">\n        </div>\n      </div>\n      <div class=\"row mt-2\">\n        <div class=\"col\">\n          <input type=\"text\" name=\"apellidos\" #name=\"ngModel\" [(ngModel)]=\"studentService.selectedStudent.apellidos\" class=\"form-control\" placeholder=\"Apellidos\">\n        </div>\n        <div class=\"col\">\n          <input type=\"text\" name=\"genero\" #name=\"ngModel\" [(ngModel)]=\"studentService.selectedStudent.genero\" class=\"form-control\" placeholder=\"Genero\" >\n        </div>\n      </div>\n      <div class=\"row\">\n        <div class=\"col s12\">\n        <label>Selecciona el curso</label>\n            <select class=\"custom-select\" name=\"curso\" #name=\"ngModel\" [(ngModel)]=\"studentService.selectedStudent.curso\">\n              <option *ngFor=\"let course of courseService.courses\" value=\"{{course.nombre}}\" >{{course.nombre}}</option>\n            </select>\n            <small>Recuerda que el estudiante debe estar asociado a una materia para poder registrarlo</small>\n        </div>\n      </div>\n      \n      <button type=\"submit\" class=\"btn btn-outline-success\">Guardar curso</button>\n\n      <table class=\"table table-hover mt-4\">\n          <thead>\n            <tr>\n              <th scope=\"col\">Identificacion</th>\n              <th scope=\"col\">Nombres</th>\n              <th scope=\"col\">Apellidos</th>\n              <th scope=\"col\">Genero</th>\n              <th scope=\"col\">Curso</th>\n              <th scope=\"col\">Editar</th>\n              <th scope=\"col\">Eliminar</th>\n            </tr>\n          </thead>\n          <tbody *ngFor=\"let student of studentService.students\">\n              <td>{{student.identificacion}}</td>\n              <td>{{student.nombres}}</td>\n              <td>{{student.apellidos}}</td>\n              <td>{{student.genero}}</td>\n              <td>{{student.curso.nombre}}</td>\n              <td><button (click)=\"editStudent(student)\" type=\"button\" class=\"btn btn-outline-warning\">Editar</button></td>            \n              <td><button (click)=\"deleteStudent(student._id, studentsForm)\" type=\"button\" class=\"btn btn-outline-danger\">Eliminar</button></td>            \n          </tbody>\n        </table>\n    </form>\n</div>\n"
 
 /***/ }),
 
@@ -453,31 +465,38 @@ var StudentsComponent = /** @class */ (function () {
             _this.courseService.courses = data;
         });
     };
-    StudentsComponent.prototype.saveStudents = function () {
+    StudentsComponent.prototype.saveStudents = function (form) {
         var _this = this;
-        var newStudent = {
-            identificacion: this.modelStudents.identificacion,
-            nombres: this.modelStudents.nombres,
-            apellidos: this.modelStudents.apellidos,
-            genero: this.modelStudents.genero,
-            curso: this.modelStudents.curso
-        };
-        this.studentService.postStudent(newStudent).subscribe(function (res) {
-            _this.getStudents();
-            console.log(res);
-        });
-        this.modelStudents.identificacion = '';
-        this.modelStudents.nombres = '';
-        this.modelStudents.apellidos = '';
-        this.modelStudents.genero = '';
-        this.modelStudents.curso = '';
+        if (form.value._id) {
+            this.studentService.updateStudent(form.value).subscribe(function (res) {
+                _this.getStudents();
+                console.log(res);
+            });
+        }
+        else {
+            this.studentService.postStudent(form.value).subscribe(function (res) {
+                _this.cleanForm(form);
+                _this.getStudents();
+                console.log(res);
+            });
+        }
     };
     StudentsComponent.prototype.deleteStudent = function (id) {
         var _this = this;
         this.studentService.deleteStudent(id).subscribe(function (res) {
             _this.getStudents();
+            _this.cleanForm();
             console.log(res);
         });
+    };
+    StudentsComponent.prototype.editStudent = function (student) {
+        this.studentService.selectedStudent = student;
+    };
+    StudentsComponent.prototype.cleanForm = function (form) {
+        if (form) {
+            form.reset();
+            this.studentService.selectedStudent = new _models_students__WEBPACK_IMPORTED_MODULE_3__["Students"]();
+        }
     };
     StudentsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -512,7 +531,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n<hr>\n    <ul class=\"nav justify-content-around\">\n        <li class=\"nav-item\">\n          <a class=\"nav-link active\" routerLink=\"/courses\"><h3>Cursos</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/students\"><h3>Estudiantes</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/teachers\"><h3>Profesores</h3></a>\n        </li>\n        <li class=\"nav-item\">\n            <a class=\"nav-link\" routerLink=\"/users\"><h3>Registra un nuevo usuario</h3></a>\n        </li>\n      </ul>\n</div>\n<div class=\"container\">\n    <h1 class=\"text-center\">Registro de profesores</h1>\n    <form (ngSubmit)=\"saveTeachers()\">\n        <div class=\"row\">\n          <div class=\"col\">\n            <input type=\"text\" [(ngModel)]=\"modelTeacher.identidad\" class=\"form-control\" placeholder=\"Identificacion\" [ngModelOptions]=\"{standalone: true}\" required>\n          </div>\n          <div class=\"col\">\n            <input type=\"text\" [(ngModel)]=\"modelTeacher.nombres\" class=\"form-control\" placeholder=\"Nombres\" [ngModelOptions]=\"{standalone: true}\" required>\n          </div>\n        </div>\n        <div class=\"row mt-2\">\n          <div class=\"col\">\n            <input type=\"text\" [(ngModel)]=\"modelTeacher.apellidos\" class=\"form-control\" placeholder=\"Apellidos\" [ngModelOptions]=\"{standalone: true}\" required>\n          </div>\n          <div class=\"col\">\n            <input type=\"text\" [(ngModel)]=\"modelTeacher.genero\" class=\"form-control\" placeholder=\"Genero\" [ngModelOptions]=\"{standalone: true}\" required>\n          </div>\n        </div>\n        <div class=\"row mt-2\">\n          <div class=\"col\">\n              <label>Selecciona el curso</label>\n              <select class=\"custom-select\" [(ngModel)]=\"modelTeacher.curso\" [ngModelOptions]=\"{standalone: true}\">\n                <option *ngFor=\"let course of coursesService.courses\" value=\"{{course.nombre}}\" >{{course.nombre}}</option>\n              </select>\n              <small>Recuerda que el profesor debe estar asociado a una materia para poder registrarlo</small>              \n          </div>\n        </div>\n        \n        <button type=\"submit\" class=\"btn btn-outline-primary mt-2 mx-auto\">Guardar curso</button>\n      </form>\n  \n      <table class=\"table table-hover mt-4\">\n          <thead>\n            <tr>\n              <th scope=\"col\">Identificacion</th>\n              <th scope=\"col\">Nombres</th>\n              <th scope=\"col\">Apellidos</th>\n              <th scope=\"col\">Genero</th>\n              <th scope=\"col\">Curso</th>\n              <th scope=\"col\">Acción</th>\n            </tr>\n          </thead>    \n          <tbody *ngFor=\"let teacher of teacherService.teachers\">\n            <tr>\n              <td>{{teacher.identidad}}</td>\n              <td>{{teacher.nombres}}</td>\n              <td>{{teacher.apellidos}}</td>\n              <td>{{teacher.genero}}</td>\n              <td>{{teacher.curso.nombre}}</td>\n            <td><button (click)=\"deleteTeacher(teacher._id)\" type=\"button\" class=\"btn btn-outline-danger\">Eliminar</button></td>\n            </tr>\n          </tbody>   \n        </table>\n  </div>\n  \n  \n"
+module.exports = "<div class=\"container\">\n  <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n<hr>\n<nav class=\"navbar navbar-expand-sm navbar-dark bg-dark\">\n    <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNavAltMarkup\" aria-controls=\"navbarNavAltMarkup\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n    <div class=\"collapse navbar-collapse\" id=\"navbarNavAltMarkup\">\n      <div class=\"navbar-nav\">\n        <a class=\"nav-link active\" routerLink=\"/courses\">Cursos</a>\n        <a class=\"nav-link\" routerLink=\"/students\">Estudiantes</a>\n        <a class=\"nav-link\" routerLink=\"/teachers\">Profesores</a>\n        <a class=\"nav-link\" routerLink=\"/users\">Usuario</a>        \n      </div>\n    </div>\n  </nav>\n</div>\n<div class=\"container\">\n    <h1 class=\"text-center\">Registro de profesores</h1>\n    <form #teacherForm=\"ngForm\" (ngSubmit)=\"saveTeachers(teacherForm)\">\n        <input type=\"hidden\" name=\"_id\" #_id=\"ngModel\" [(ngModel)]=\"teacherService.selectedTeacher._id\">    \n      \n        <div class=\"row\">\n          <div class=\"col\">\n            <input type=\"text\" name=\"identidad\" #name=\"ngModel\" [(ngModel)]=\"teacherService.selectedTeacher.identidad\" class=\"form-control\" placeholder=\"Identificacion\">\n          </div>\n          <div class=\"col\">\n            <input type=\"text\" name=\"nombres\" #name=\"ngModel\" [(ngModel)]=\"teacherService.selectedTeacher.nombres\" class=\"form-control\" placeholder=\"Nombres\">\n          </div>\n        </div>\n        <div class=\"row mt-2\">\n          <div class=\"col\">\n            <input type=\"text\" name=\"apellidos\" #name=\"ngModel\" [(ngModel)]=\"teacherService.selectedTeacher.apellidos\" class=\"form-control\" placeholder=\"Apellidos\">\n          </div>\n          <div class=\"col\">\n            <input type=\"text\" name=\"genero\" #name=\"ngModel\" [(ngModel)]=\"teacherService.selectedTeacher.genero\" class=\"form-control\" placeholder=\"Genero\">\n          </div>\n        </div>\n        <div class=\"row mt-2\">\n          <div class=\"col\">\n              <label>Selecciona el curso</label>\n              <select class=\"custom-select\" name=\"curso\" #name=\"ngModel\" [(ngModel)]=\"teacherService.selectedTeacher.curso\">\n                <option *ngFor=\"let course of coursesService.courses\" value=\"{{course.nombre}}\" >{{course.nombre}}</option>\n              </select>\n              <small>Recuerda que el profesor debe estar asociado a una materia para poder registrarlo</small>              \n          </div>\n        </div>\n        <button type=\"submit\" class=\"btn btn-outline-success mt-2 mx-auto\">Guardar curso</button>\n        <table class=\"table table-hover mt-4\">\n            <thead>\n              <tr>\n                <th scope=\"col\">Identificacion</th>\n                <th scope=\"col\">Nombres</th>\n                <th scope=\"col\">Apellidos</th>\n                <th scope=\"col\">Genero</th>\n                <th scope=\"col\">Curso</th>\n                <th scope=\"col\">Editar</th>\n                <th scope=\"col\">Eliminar</th>\n              </tr>\n            </thead>    \n            <tbody *ngFor=\"let teacher of teacherService.teachers\">\n              <tr>\n                <td>{{teacher.identidad}}</td>\n                <td>{{teacher.nombres}}</td>\n                <td>{{teacher.apellidos}}</td>\n                <td>{{teacher.genero}}</td>\n                <td>{{teacher.curso.nombre}}</td>\n                <td><button (click)=\"editTeacher(teacher)\" type=\"button\" class=\"btn btn-outline-warning\">Editar</button></td>\n                <td><button (click)=\"deleteTeacher(teacher._id, teacherForm)\" type=\"button\" class=\"btn btn-outline-danger\">Eliminar</button></td>\n              </tr>\n            </tbody>   \n          </table>\n      </form>\n  \n  </div>\n  \n  \n"
 
 /***/ }),
 
@@ -562,36 +581,42 @@ var TeachersComponent = /** @class */ (function () {
     TeachersComponent.prototype.getTeachers = function () {
         var _this = this;
         this.teacherService.getTeachers().subscribe(function (res) {
-            console.log("si");
             _this.teacherService.teachers = res;
             ;
         });
     };
-    TeachersComponent.prototype.saveTeachers = function () {
+    TeachersComponent.prototype.saveTeachers = function (form) {
         var _this = this;
-        var newTeacher = {
-            identidad: this.modelTeacher.identidad,
-            nombres: this.modelTeacher.nombres,
-            apellidos: this.modelTeacher.apellidos,
-            genero: this.modelTeacher.genero,
-            curso: this.modelTeacher.curso
-        };
-        this.teacherService.postTeacher(newTeacher).subscribe(function (res) {
-            _this.getTeachers();
-            console.log(res);
-        });
-        this.modelTeacher.identidad = '';
-        this.modelTeacher.nombres = '';
-        this.modelTeacher.apellidos = '';
-        this.modelTeacher.genero = '';
-        this.modelTeacher.curso = '';
+        if (form.value._id) {
+            this.teacherService.updateTeacher(form.value).subscribe(function (res) {
+                _this.getTeachers();
+                console.log(res);
+            });
+        }
+        else {
+            this.teacherService.postTeacher(form.value).subscribe(function (res) {
+                _this.getTeachers();
+                _this.cleanForm(form);
+                console.log(res);
+            });
+        }
     };
-    TeachersComponent.prototype.deleteTeacher = function (id) {
+    TeachersComponent.prototype.editTeacher = function (teacher) {
+        this.teacherService.selectedTeacher = teacher;
+    };
+    TeachersComponent.prototype.deleteTeacher = function (id, form) {
         var _this = this;
         this.teacherService.deleteTeacher(id).subscribe(function (res) {
             _this.getTeachers();
+            _this.cleanForm(form);
             console.log(res);
         });
+    };
+    TeachersComponent.prototype.cleanForm = function (form) {
+        if (form) {
+            form.reset();
+            this.teacherService.selectedTeacher = new _models_teachers__WEBPACK_IMPORTED_MODULE_3__["Teachers"]();
+        }
     };
     TeachersComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -626,7 +651,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n<hr>\n    <ul class=\"nav justify-content-around\">\n        <li class=\"nav-item\">\n          <a class=\"nav-link active\" routerLink=\"/courses\"><h3>Cursos</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/students\"><h3>Estudiantes</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/teachers\"><h3>Profesores</h3></a>\n        </li>\n        <li class=\"nav-item\">\n          <a class=\"nav-link\" routerLink=\"/users\"><h3>Registra un nuevo usuario</h3></a>\n        </li>\n      </ul>\n</div>\n\n<div class=\"container mt-4\">\n  <div class=\"col\">\n    <h2 class=\"text-center\">Registra un nuevo usuario</h2>\n    <form (ngSubmit)=\"saveUsers()\">\n      <div class=\"form-group\">\n        <label for=\"exampleInputEmail1\">Usuario</label>\n        <input type=\"text\" class=\"form-control\" [(ngModel)]=\"modelUsers.user\" placeholder=\"Ingresa tu usuario\" [ngModelOptions]=\"{standalone: true}\">\n        <small class=\"form-text text-muted\">Este usuario puede ser un correo o un nombre</small>\n      </div>\n      <div class=\"form-group\">\n        <label>Contraseña</label>\n        <input type=\"password\" class=\"form-control\" [(ngModel)]=\"modelUsers.password\" placeholder=\"Contraseña\" [ngModelOptions]=\"{standalone: true}\">\n      </div>\n      <button type=\"submit\" class=\"btn btn-success mr-auto\">Registrarme</button>\n    </form>\n  </div>\n</div>\n\n"
+module.exports = "<div class=\"container\">\n  <h1 class=\"display-4 text-center\">Gestión de datos</h1>\n<hr>\n<nav class=\"navbar navbar-expand-sm navbar-dark bg-dark\">\n    <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarNavAltMarkup\" aria-controls=\"navbarNavAltMarkup\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n    <div class=\"collapse navbar-collapse\" id=\"navbarNavAltMarkup\">\n      <div class=\"navbar-nav\">\n        <a class=\"nav-link active\" routerLink=\"/courses\">Cursos</a>\n        <a class=\"nav-link\" routerLink=\"/students\">Estudiantes</a>\n        <a class=\"nav-link\" routerLink=\"/teachers\">Profesores</a>\n        <a class=\"nav-link\" routerLink=\"/users\">Usuario</a>        \n      </div>\n    </div>\n  </nav>\n</div>\n\n<div class=\"container mt-4\">\n  <div class=\"col\">\n    <h2 class=\"text-center\">Registra un nuevo usuario</h2>\n    <form (ngSubmit)=\"saveUsers()\">\n      <div class=\"form-group\">\n        <label for=\"exampleInputEmail1\">Usuario</label>\n        <input type=\"text\" class=\"form-control\" [(ngModel)]=\"modelUsers.user\" placeholder=\"Ingresa tu usuario\" [ngModelOptions]=\"{standalone: true}\">\n        <small class=\"form-text text-muted\">Este usuario puede ser un correo o un nombre</small>\n      </div>\n      <div class=\"form-group\">\n        <label>Contraseña</label>\n        <input type=\"password\" class=\"form-control\" [(ngModel)]=\"modelUsers.password\" placeholder=\"Contraseña\" [ngModelOptions]=\"{standalone: true}\">\n      </div>\n      <button type=\"submit\" class=\"btn btn-success mr-auto\">Registrarme</button>\n    </form>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -867,6 +892,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CoursesService", function() { return CoursesService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _models_courses__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../models/courses */ "./src/app/models/courses.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -878,16 +904,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var CoursesService = /** @class */ (function () {
     function CoursesService(http) {
         this.http = http;
         this.API_COURSES = 'http://localhost:3000';
+        this.selectedCourse = new _models_courses__WEBPACK_IMPORTED_MODULE_2__["Courses"]();
     }
     CoursesService.prototype.getCourses = function () {
         return this.http.get(this.API_COURSES + "/courses");
     };
     CoursesService.prototype.postCourses = function (course) {
         return this.http.post(this.API_COURSES + "/courses", course);
+    };
+    CoursesService.prototype.updateCourse = function (course) {
+        return this.http.put(this.API_COURSES + "/courses/" + course._id, course);
     };
     CoursesService.prototype.deleteCourse = function (id) {
         return this.http.delete(this.API_COURSES + "/courses/" + id);
@@ -964,6 +995,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StudentsService", function() { return StudentsService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _models_students__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../models/students */ "./src/app/models/students.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -975,16 +1007,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var StudentsService = /** @class */ (function () {
     function StudentsService(http) {
         this.http = http;
         this.API_STUDENTS = 'http://localhost:3000';
+        this.selectedStudent = new _models_students__WEBPACK_IMPORTED_MODULE_2__["Students"]();
     }
     StudentsService.prototype.getStudents = function () {
         return this.http.get(this.API_STUDENTS + "/students");
     };
     StudentsService.prototype.postStudent = function (student) {
         return this.http.post(this.API_STUDENTS + "/students", student);
+    };
+    StudentsService.prototype.updateStudent = function (student) {
+        return this.http.put(this.API_STUDENTS + "/students/" + student._id, student);
     };
     StudentsService.prototype.deleteStudent = function (id) {
         return this.http.delete(this.API_STUDENTS + "/students/" + id);
@@ -1014,6 +1051,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TeachersService", function() { return TeachersService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _models_teachers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../models/teachers */ "./src/app/models/teachers.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1025,16 +1063,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var TeachersService = /** @class */ (function () {
     function TeachersService(http) {
         this.http = http;
         this.API_TEACHERS = 'http://localhost:3000';
+        this.selectedTeacher = new _models_teachers__WEBPACK_IMPORTED_MODULE_2__["Teachers"]();
     }
     TeachersService.prototype.getTeachers = function () {
         return this.http.get(this.API_TEACHERS + "/teachers");
     };
     TeachersService.prototype.postTeacher = function (teacher) {
         return this.http.post(this.API_TEACHERS + "/teachers", teacher);
+    };
+    TeachersService.prototype.updateTeacher = function (teacher) {
+        return this.http.put(this.API_TEACHERS + "/teachers/" + teacher._id, teacher);
     };
     TeachersService.prototype.deleteTeacher = function (id) {
         return this.http.delete(this.API_TEACHERS + "/teachers/" + id);
